@@ -44,7 +44,7 @@ public class Student {
 	
 	@ManyToOne
     @JoinColumn(name="staffId")
-	private Staff staff;
+	private Staff staffId;
 
 	public int getStudentId() {
 		return studentId;
@@ -86,15 +86,16 @@ public class Student {
 		this.studentPhoneNo = studentPhoneNo;
 	}
 
-	public Staff getStaff() {
-		return staff;
+	public Staff getStaffId() {
+		return staffId;
 	}
 
-	public void setStaff(Staff staff) {
-		this.staff = staff;
+	public void setStaffId(Staff staffId) {
+		this.staffId = staffId;
 	}
 
 	
-	
+
+   
 	
 }

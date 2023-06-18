@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
-  <title>REST Consumer</title>
+  <title>Examination Attendance System</title>
 
   <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
   <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
@@ -29,23 +29,7 @@
       </button>
     </div>
 
-    <!-- <div class="my-3">
-      <form th:action="@{/tutorials}">
-        <div class="row d-flex">
-          <div class="col-md-6 mt-2">
-            <div class="search">
-              <i class="fa fa-search"></i>
-              <input id="keyword" type="search" name="keyword" th:value="${keyword}" required class="form-control"
-                placeholder="Enter keyword">
-              <button type="submit" class="btn btn-secondary">Search</button>
-            </div>
-          </div>
-          <div class="col-md-6 mt-2">
-            <button id="btnClear" class="btn btn-info">Clear</button>
-          </div>
-        </div>
-      </form>
-    </div> -->
+   
 
     <div th:if="${examinations.size() > 0}">
       <table class="table table-hover table-responsive-xl">
@@ -53,40 +37,39 @@
           <tr>
             <th scope="col">Id</th>
             <th scope="col">Date</th>
-            <th scope="col">Name</th>
             <th scope="col">Location</th>
             <th scope="col">Start Time</th>
             <th scope="col">End Time</th>
             <th scope="col">Invigilator</th>
-            <!-- <th scope="col">Action</th>  -->
+            <th scope="col">Subject</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr th:each="examination : ${examinations}">
             <th scope="row">[[${examination.examId}]]</th>
-            <td>[[${examination.examDate}]]</td>
+            <td>[[${#dates.format(examination.examDate, 'dd-MM-yyyy')}]]</td>
             <td>[[${examination.examLocation}]]</td>
              <td>[[${examination.examStartTime}]]</td>
              <td>[[${examination.examEndTime}]]</td>
-             <td>[[${examination.staffId}]]</td>
+             <td>[[${examination.staff.staffName}]]</td>
+             <td>[[${examination.subject.SubjectName}]]</td>
             <td>
-              <!-- A link to edit an order type -->
-              <!-- <a th:href="@{'/ordertype/' + ${orderType.orderTypeId}}" 
-              	title="Edit this order type"
-                class="fa-regular fa-pen-to-square icon-dark"></a>
-              &nbsp; -->
+            
+            <!-- A link to edit an order type -->
+               <a th:href="@{'/examination/' + ${examination.examId}}" 
+              	title="Open"
+                class="fa-regular fa-calendar-check icon-dark"></a>
+              &nbsp; 
               
-              <!-- A link to delete an order type -->
-              <!-- <a th:href="@{'/ordertype/delete/' + ${orderType.orderTypeId}}" 
-              th:orderTypeCode="${orderType.code}" id="btnDelete"
-                title="Delete this order type" 
-                class="fa-regular fa-trash-can icon-dark btn-delete"></a> -->
 
             </td> 
           </tr>
         </tbody>
       </table>
     </div>
+    
+    
 
     <div class="" th:unless="${examinations.size() > 0}">
       <span>No record found!</span>
@@ -123,16 +106,16 @@
         e.preventDefault();
         link = $(this);
 
-        orderTypeCode = link.attr("orderTypeCode");
+        examId = link.attr("examId");
         $("#yesBtn").attr("href", link.attr("href"));
-        $("#confirmText").html("Do you want to delete the  \<strong\>" + orderTypeCode + "\<\/strong\>?");
+        $("#confirmText").html("Do you want to delete the  \<strong\>" + examId + "\<\/strong\>?");
         $("#confirmModal").modal();
       });
 
       $("#btnClear").on("click", function (e) {
         e.preventDefault();
         $("#keyword").text("");
-        window.location = "[[@{/ordertype/list}]]";
+        window.location = "[[@{/examination/list}]]";
       });
     });
   </script>

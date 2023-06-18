@@ -3,6 +3,7 @@ package my.edu.utem.ftmk.dad.attendancesystem.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import my.edu.utem.ftmk.dad.attendancesystem.model.Student;
 import my.edu.utem.ftmk.dad.attendancesystem.repository.StudentRepository;
 
+@Service
 @RestController
 @RequestMapping("/api/students")
 public class StudentRESTController {
@@ -26,6 +28,11 @@ public class StudentRESTController {
 	{
 		return studentRepository.findAll();
 	}
+	
+	 public List<Student> searchStudentsByName(String keyword) 
+	 {
+	    return studentRepository.findByStudentNameContaining(keyword);
+	 }
 	
 	@GetMapping("{studentId}")
 	public Student getStudent(@PathVariable long studentId)
@@ -43,6 +50,8 @@ public class StudentRESTController {
 	public Student updateStudent(@RequestBody Student student) {
 		return studentRepository.save(student);
 	}
+	
+
 	
 
 }

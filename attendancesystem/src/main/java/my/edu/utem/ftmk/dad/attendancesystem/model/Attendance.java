@@ -1,6 +1,8 @@
 package my.edu.utem.ftmk.dad.attendancesystem.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -64,7 +66,8 @@ public class Attendance {
 	}
 
 
-	public void setAttendanceDateTime(LocalDateTime attendanceDateTime) {
+	public void setAttendanceDateTime(String attendanceDateTimeString) {
+		LocalDateTime attendanceDateTime = LocalDateTime.parse(attendanceDateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		this.attendanceDateTime = attendanceDateTime;
 	}
 

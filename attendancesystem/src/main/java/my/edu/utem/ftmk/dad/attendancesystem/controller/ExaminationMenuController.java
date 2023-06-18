@@ -1,14 +1,23 @@
 package my.edu.utem.ftmk.dad.attendancesystem.controller;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import my.edu.utem.ftmk.dad.attendancesystem.model.Examination;
+import my.edu.utem.ftmk.dad.attendancesystem.model.Student;
+import my.edu.utem.ftmk.dad.attendancesystem.repository.StudentRepository;
 
 
 @Controller
@@ -19,20 +28,17 @@ public class ExaminationMenuController {
 	@GetMapping("/examination/list")
 	public String getExaminations(Model model) {
 		
-		//The URI for GET order types
-		String uri = "http://localhost:8080/orderapp/api/ordertypes";
+		//The URI for GET examination
+		String uri = "http://localhost:8080/attendancesystem/api/examinations";
 		
 		
-		//Get a list order types from the web service
+		//Get a list of examinations from the web service
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<Examination[]> response = restTemplate.getForEntity(uri, Examination[].class);
-		
-		
-		
+			
 		//Parse JSON data to array of object
 		Examination examinations[] = response.getBody();
-		
-		
+			
 		//Parse an array to a list object
 		List<Examination> examinationList = Arrays.asList(examinations);
 		
@@ -40,6 +46,73 @@ public class ExaminationMenuController {
 		model.addAttribute("examinations", examinationList);
 		
 		return "examinations";
+	}
+	
+	@GetMapping("/examination/{examId}")
+	public String getExamination (@PathVariable Integer examId, Model model) {
+		String pageTitle = "New Examination";
+		Examination examination = new Examination();
+			
+		//Give a new title to the page
+		pageTitle = "Search Name";
+			
+		//Attach value to pass to front end
+		model.addAttribute("examination", examination);
+		model.addAttribute("pageTitle", pageTitle);
+		
+		return "searchName";
+	}
+	
+	@Autowired
+	private StudentRESTController studentService;
+	
+	/*
+	 * @GetMapping("/examination/search") public String
+	 * searchExamination(@RequestParam String studentName, Model model) {
+	 * List<Student> students = studentRepository.findByStudentName(studentName);
+	 * model.addAttribute("students", students); return "searchName"; }
+	 */
+	
+	@GetMapping("/examination/search")
+	public String searchExamination(@RequestParam String keyword, @RequestParam Long examId, Model model) {
+	    List<Student> students = new ArrayList<>();
+	    // Implement your search logic here
+	    // You can use a database query or any other method to search for students based on the keyword
+	    // For example, you can use a StudentService to perform the search
+	    students = studentService.searchStudentsByName(keyword);
+	    model.addAttribute("students", students);
+	    model.addAttribute("examId", examId);
+	    return "searchName";
+	}
+	
+	
+	@RequestMapping("/examination/save")
+	public String updateExamination (@ModelAttribute Examination examination) {
+		
+		//Create a new RestTemplate
+		RestTemplate restTemplate = new RestTemplate();
+		
+		//Create a request body
+		HttpEntity<Examination> request = new HttpEntity<Examination>(examination);
+		
+		String examinationResponse = "";
+		
+		if(examination.getExamId() > 0) {
+			//This block update a new order type and
+			
+			//send request as PUT
+			restTemplate.put(defaultURI, request, Examination.class);
+		}else {
+			//This block add a new order type
+			
+			//send request as POST
+			examinationResponse = restTemplate.postForObject(defaultURI, request, String.class);
+		}
+		System.out.println(examinationResponse);
+		
+		//Redirect request to display a list of order type
+		return "redirect:/examination/list";
+		
 	}
 	
 	

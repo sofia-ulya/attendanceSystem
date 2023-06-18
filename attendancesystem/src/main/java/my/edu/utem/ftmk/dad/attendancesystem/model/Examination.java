@@ -2,6 +2,7 @@ package my.edu.utem.ftmk.dad.attendancesystem.model;
 
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,10 +51,9 @@ public class Examination {
     private  Staff staff;
 	
 	@ManyToOne
-    @JoinColumn(name="registerId")
-    private  RegistrationSubject registrationSubject;
-	
-	//getter and setters for the examination's variables.
+    @JoinColumn(name="subjectId")
+    private  Subject subject;
+
 	public int getExamId() {
 		return examId;
 	}
@@ -102,13 +102,18 @@ public class Examination {
 		this.staff = staff;
 	}
 
-	public RegistrationSubject getRegistrationSubject() {
-		return registrationSubject;
+	public Subject getSubject() {
+		return subject;
 	}
 
-	public void setRegistrationSubject(RegistrationSubject registrationSubject) {
-		this.registrationSubject = registrationSubject;
+	public void setSubject(Subject subject) {
+		this.subject = subject;
 	}
+
+	
+	
+	//getter and setters for the examination's variables.
+	
 	
 	
 	
