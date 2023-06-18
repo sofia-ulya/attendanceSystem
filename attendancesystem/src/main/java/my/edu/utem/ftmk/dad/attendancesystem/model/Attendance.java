@@ -3,6 +3,8 @@ package my.edu.utem.ftmk.dad.attendancesystem.model;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.antlr.v4.runtime.misc.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +13,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 /**
  * This class represents list of attendance records of examination for student in the system.
@@ -34,7 +39,15 @@ public class Attendance {
 	@Column (name="attendanceId")
 	private int attendanceId;
 	
-	@Column (name="attendanceDateTime")
+	/*
+	 * @Column (name="attendanceDateTime")
+	 * 
+	 * @Temporal(TemporalType.TIMESTAMP) private LocalDateTime attendanceDateTime;
+	 */
+	
+	@Column(name="attendanceDateTime")
+	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime attendanceDateTime;
 	
 	@Column (name="deviceType")
@@ -66,12 +79,23 @@ public class Attendance {
 	}
 
 
-	public void setAttendanceDateTime(String attendanceDateTimeString) {
-		LocalDateTime attendanceDateTime = LocalDateTime.parse(attendanceDateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		this.attendanceDateTime = attendanceDateTime;
+	/*
+	 * public void setAttendanceDateTime(String attendanceDateTimeString) {
+	 * LocalDateTime attendanceDateTime =
+	 * LocalDateTime.parse(attendanceDateTimeString,
+	 * DateTimeFormatter.ISO_DATE_TIME); this.attendanceDateTime =
+	 * attendanceDateTime; }
+	 */
+	
+	@PrePersist
+    public void prePersist() {
+        attendanceDateTime = LocalDateTime.now();
+    }
+
+	public void setAttendanceDateTime(LocalDateTime attendanceDateTime) {
+	    this.attendanceDateTime = attendanceDateTime;
 	}
-
-
+	
 	public String getDeviceType() {
 		return deviceType;
 	}
@@ -100,8 +124,6 @@ public class Attendance {
 	public void setStudent(Student student) {
 		this.student = student;
 	}
-	
-	
-	
+		
 
 }

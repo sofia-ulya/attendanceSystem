@@ -51,8 +51,7 @@
                 <td>[[${student.studentName}]]</td>
                <td>
 				    <form th:action="@{/attendance/save}" method="post" enctype="multipart/form-data" th:object="${attendance}">
-				    	<input type="hidden" name="attendanceDateTime" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}">
-				    	<input type="hidden" name="deviceType" th:value="'mobile phone'" />
+				    	<input type="hidden" name="deviceType" th:value="'Mobile'" />
 				        <input type="hidden" name="studentId" th:value="${student.studentId}" />
 				        <input type="hidden" name="examId" th:value="${examId}" />
 				        

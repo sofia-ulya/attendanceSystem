@@ -1,6 +1,8 @@
 package my.edu.utem.ftmk.dad.attendancesystem.controller;
 
 import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,12 +78,25 @@ public class ExaminationMenuController {
 	@GetMapping("/examination/search")
 	public String searchExamination(@RequestParam String keyword, @RequestParam Long examId, Model model) {
 	    List<Student> students = new ArrayList<>();
-	    // Implement your search logic here
-	    // You can use a database query or any other method to search for students based on the keyword
-	    // For example, you can use a StudentService to perform the search
-	    students = studentService.searchStudentsByName(keyword);
-	    model.addAttribute("students", students);
-	    model.addAttribute("examId", examId);
+	    try {
+		    LocalDateTime currentDateTime = LocalDateTime.now();
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		    String formattedDateTime = currentDateTime.format(formatter);
+		    students = studentService.searchStudentsByName(keyword);
+		    model.addAttribute("students", students);
+		    model.addAttribute("examId", examId);
+		    model.addAttribute("currentDateTime", formattedDateTime);
+		    
+		 // Log the values for verification
+		    System.out.println("Keyword: " + keyword);
+	        System.out.println("ExamId: " + examId);
+	        System.out.println("Current DateTime: " + formattedDateTime);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        // You can add custom error handling logic here, such as redirecting to an error page
+	        return "errorPage";
+	    }
 	    return "searchName";
 	}
 	
